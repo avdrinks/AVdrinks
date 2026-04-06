@@ -1,110 +1,153 @@
+/* Importar fuentes */
 body {
-    background-image: url('img/fondo-bar.jpg'); /* Tu imagen */
-    background-size: cover; /* Para que cubra toda la pantalla */
-    background-position: center; /* Centrada */
-    background-attachment: fixed; /* Esto hace que el fondo no se mueva al hacer scroll, queda muy profesional */
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    color: #ffffff;
+    background-color: #0d0d0d;
+    background-image: url('img/fondo-bar.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
 }
 
-/* IMPORTANTE: Si pones una imagen de fondo, necesitas oscurecerla 
-   para que el texto se siga leyendo bien */
+/* Capa oscura para que el texto resalte sobre el fondo */
 body::before {
     content: "";
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Una capa negra al 70% de opacidad */
-    z-index: -1; /* Detrás del contenido */
+    background-color: rgba(0, 0, 0, 0.75); 
+    z-index: -1;
+}
+
+header {
+    text-align: center;
+    padding: 40px 20px 20px;
 }
 
 .logo {
-    width: 80px;
-    display: block;
-    margin: 0 auto;
+    width: 100px;
+    height: auto;
+    filter: drop-shadow(0 0 10px #00ffcc);
+    margin-bottom: 10px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.tagline {
+    color: #00ffcc;
+    margin-top: 5px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
 }
 
 h2 {
-    color: #00ffcc; /* Color Neón */
-    border-bottom: 1px solid #333;
+    text-align: center;
+    color: #ffffff;
+    text-transform: uppercase;
+    border-bottom: 2px solid #00ffcc;
+    display: inline-block;
+    margin: 30px auto 20px;
+    padding-bottom: 5px;
 }
 
-.producto {
+#menu {
     display: flex;
-    justify-content: space-between;
-    padding: 15px;
-    background: #1a1a1a;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 100px;
 }
 
-#btn-whatsapp {
-    position: fixed;
-    bottom: 20px;
-    width: calc(100% - 40px);
-    padding: 15px;
-    background: #25d366;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    font-weight: bold;
-}
+/* Grid de productos */
 .grid-productos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 15px;
-    padding: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1000px;
+    box-sizing: border-box;
 }
 
+/* Tarjeta individual */
 .tarjeta-producto {
-    background: #1a1a1a;
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(5px); /* Efecto vidrio */
     border: 1px solid #333;
-    border-radius: 12px;
-    padding: 10px;
+    border-radius: 15px;
+    padding: 15px;
     text-align: center;
     transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .tarjeta-producto:hover {
-    border-color: #00ffcc; /* Efecto neón al pasar el dedo/mouse */
+    border-color: #00ffcc;
+    transform: translateY(-5px);
 }
 
 .tarjeta-producto img {
     width: 100%;
-    height: 120px;
-    object-fit: contain; /* Para que la botella no se estire */
+    height: 140px;
+    object-fit: contain;
     margin-bottom: 10px;
 }
-/* Color del Nombre del Producto */
+
 .tarjeta-producto h3 {
-    color: #ffffff; /* Blanco puro para que se lea perfecto */
-    font-size: 1.1rem;
-    margin: 10px 0 5px 0;
-    font-weight: 600;
-    text-transform: uppercase; /* Le da un toque más industrial/brand */
+    margin: 10px 0 5px;
+    font-size: 1rem;
+    color: #ffffff;
 }
 
-/* Color del Precio */
 .tarjeta-producto p {
-    color: #00ffcc; /* El verde neón para que resalte el valor */
-    font-size: 1.3rem;
-    font-weight: 800;
-    margin: 5px 0;
-    text-shadow: 0 0 10px rgba(0, 255, 204, 0.4); /* Brillo neón en el precio */
-}
-
-/* El botón de "Agregar" dentro de la tarjeta */
-.tarjeta-producto button {
-    background: transparent;
     color: #00ffcc;
-    border: 1px solid #00ffcc;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-    width: 100%;
+    font-size: 1.2rem;
+    font-weight: 900;
+    margin: 5px 0 15px;
 }
 
-.tarjeta-producto button:hover {
+.tarjeta-producto button {
     background: #00ffcc;
-    color: #000; /* Invierte colores al pasar el mouse */
+    color: #000;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+/* Botón Flotante de WhatsApp */
+#btn-whatsapp {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    padding: 18px;
+    background: #25d366;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 900;
+    font-size: 1rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.footer-spacer {
+    height: 100px;
 }
