@@ -6,27 +6,47 @@
     <title>AV DRINKS - Pedidos</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <header>
-        <img src="logo-av.png" alt="AV Drinks Logo" class="logo">
-        <h1>AV DRINKS</h1>
-        <p>Delivery de Bebidas</p>
-    </header>
 
-    <section id="menu">
-        <div class="categoria">
-            <h2>Cervezas</h2>
-            <div class="producto" onclick="agregarAlCarrito('FERNET BRANCA 750ml + COCA COLA 2.5lts + HIELO', 19500)">
-                <span>FERNET BRANCA 750ml + COCA COLA 2.5lts + HIELO </span>
-                <span>$19500</span>
-            </div>
-        </div>
-        </section>
+<header>
+    <img src="logo-av.png" alt="AV Drinks Logo" class="logo">
+    <h1>AV DRINKS</h1>
+    <p>Delivery de Bebidas</p>
+</header>
 
-    <button id="btn-whatsapp" onclick="enviarPedido()">
-        Enviar Pedido por WhatsApp
-    </button>
+<!-- CONTADOR -->
+<div class="carrito-info">
+    🛒 Productos: <span id="contador-productos">0</span>
+</div>
 
-    <script src="script.js"></script>
+<!-- PRODUCTOS -->
+<section id="contenedor-productos"></section>
+
+<!-- ENTREGA -->
+<div class="tipo-entrega">
+    <h3>¿Cómo querés recibir tu pedido?</h3>
+
+    <div class="opciones">
+        <button id="btn-retiro" class="activo" onclick="seleccionarEntrega('retiro')">
+            🏠 Retiro
+        </button>
+
+        <button id="btn-delivery" onclick="seleccionarEntrega('delivery')">
+            🚚 Delivery
+        </button>
+    </div>
+
+    <div id="campo-direccion" style="display:none;">
+        <input type="text" id="direccion" placeholder="Tu dirección (barrio, calle, referencia)">
+    </div>
+</div>
+
+<!-- BOTON -->
+<button id="btn-whatsapp" onclick="enviarPedido()">
+    Enviar Pedido por WhatsApp
+</button>
+
+<script src="script.js"></script>
 </body>
 </html>
