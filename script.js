@@ -2,10 +2,16 @@ const URL_API = "https://script.google.com/macros/s/AKfycby5myZ0i9IGHpsKkt4kUmA3
 
 let productos = [];
 let carrito = [];
+let tipoEntrega = "retiro";
+let ubicacionLink = "";
 
+// ELEMENTOS
 const contenedor = document.getElementById("contenedor-productos");
 const contador = document.getElementById("contador-productos");
 
+// =========================
+// CARGAR PRODUCTOS DESDE SHEET
+// =========================
 async function cargarProductos() {
     try {
         const res = await fetch(URL_API);
@@ -28,6 +34,9 @@ async function cargarProductos() {
     }
 }
 
+// =========================
+// RENDER PRODUCTOS
+// =========================
 function renderProductos() {
     contenedor.innerHTML = "";
 
@@ -51,6 +60,9 @@ function renderProductos() {
     });
 }
 
+// =========================
+// CARRITO
+// =========================
 function sumar(id) {
     const prod = productos.find(p => p.id === id);
     carrito.push(prod);
@@ -75,15 +87,59 @@ function actualizarCantidad(id, cambio) {
     contador.innerText = carrito.length;
 }
 
+// =========================
+// ENTREGA
+// =========================
+function seleccionarEntrega(tipo) {
+    tipoEntrega = tipo;
+
+    const btnRetiro = document.getElementById("btn-retiro");
+    const btnDelivery = document.getElementById("btn-delivery");
+    const campo = document.getElementById("campo-direccion");
+
+    btnRetiro.classList.remove("activo");
+    btnDelivery.classList.remove("activo");
+
+    if (tipo === "retiro") {
+        btnRetiro.classList.add("activo");
+        campo.style.display = "none";
+        ubicacionLink = "";
+    } else {
+        btnDelivery.classList.add("activo");
+        campo.style.display = "block";
+    }
+}
+
+// =========================
+// UBICACION GPS
+// =========================
+function usarUbicacion() {
+    if (!navigator.geolocation) {
+        alert("Tu navegador no permite ubicación");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(pos => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        ubicacionLink = `https://www.google.com/maps?q=${lat},${lon}`;
+
+        alert("Ubicación cargada ✔");
+    });
+}
+
+// =========================
+// ENVIAR PEDIDO
+// =========================
 function enviarPedido() {
     if (carrito.length === 0) {
-        alert("Pedido vacío");
+        alert("El pedido está vacío");
         return;
     }
 
     let mensaje = "Hola AV Drinks, quiero:%0A%0A";
     let total = 0;
-
     const resumen = {};
 
     carrito.forEach(p => {
@@ -95,10 +151,32 @@ function enviarPedido() {
         mensaje += `*${resumen[nombre]}x* ${nombre}%0A`;
     }
 
-    mensaje += `%0ATotal: $${total}`;
+    mensaje += `%0A*Total: $${total}*%0A%0A`;
+
+    // ENTREGA
+    if (tipoEntrega === "delivery") {
+        const direccion = document.getElementById("direccion").value;
+
+        mensaje += "🚚 *Delivery*%0A";
+
+        if (ubicacionLink) {
+            mensaje += `📍 Ubicación: ${ubicacionLink}%0A`;
+        } else if (direccion) {
+            mensaje += `📍 Dirección: ${direccion}%0A`;
+        } else {
+            alert("Poné ubicación o dirección");
+            return;
+        }
+
+    } else {
+        mensaje += "🏠 *Retiro en el local*%0A";
+    }
 
     const telefono = "5492634351883";
     window.open(`https://wa.me/${telefono}?text=${mensaje}`);
 }
 
+// =========================
+// INICIAR
+// =========================
 cargarProductos();
