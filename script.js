@@ -1,17 +1,31 @@
-const productos = [
-    { id: 1, nombre: "FERNET + COCA + HIELO", precio: 19500, img: "img/fernet.png" },
-    { id: 2, nombre: "Cerveza Lata 473ml", precio: 1800, img: "img/cerveza.png" },
-    { id: 3, nombre: "Gaseosa 2.25L", precio: 2500, img: "img/cola.png" }
-];
+const URL_SHEET = "https://docs.google.com/spreadsheets/d/1_p5_XZAqXt1qyiLfpC08NhmI8iTLel438tMDDD19wWU/edit?usp=drivesdk";
 
-let carrito = {};
-let tipoEntrega = "retiro";
-let ubicacionCliente = null;
+let productos = [];
+let carrito = [];
 
 const contenedor = document.getElementById('contenedor-productos');
-const contadorVisual = document.getElementById('contador-productos');
+const contador = document.getElementById('contador-productos');
 
-function cargarProductos() {
+async function cargarProductos() {
+    const res = await fetch(URL_SHEET);
+    const data = await res.text();
+
+    const filas = data.split("\n").slice(1);
+
+    productos = filas.map(fila => {
+        const [id, nombre, precio, img] = fila.split(",");
+        return {
+            id: parseInt(id),
+            nombre,
+            precio: parseInt(precio),
+            img
+        };
+    });
+
+    renderProductos();
+}
+
+function renderProductos() {
     contenedor.innerHTML = "";
 
     productos.forEach(prod => {
@@ -24,9 +38,9 @@ function cargarProductos() {
             <p>$${prod.precio}</p>
 
             <div class="contador">
-                <button onclick="cambiarCantidad(${prod.id}, -1)">-</button>
-                <span id="cantidad-${prod.id}">0</span>
-                <button onclick="cambiarCantidad(${prod.id}, 1)">+</button>
+                <button onclick="restar(${prod.id})">-</button>
+                <span id="cant-${prod.id}">0</span>
+                <button onclick="sumar(${prod.id})">+</button>
             </div>
         `;
 
@@ -34,111 +48,54 @@ function cargarProductos() {
     });
 }
 
-function cambiarCantidad(id, cambio) {
-    const producto = productos.find(p => p.id === id);
-
-    if (!carrito[id]) {
-        carrito[id] = { ...producto, cantidad: 0 };
-    }
-
-    carrito[id].cantidad += cambio;
-
-    if (carrito[id].cantidad <= 0) {
-        delete carrito[id];
-    }
-
-    actualizarVista();
+function sumar(id) {
+    const prod = productos.find(p => p.id === id);
+    carrito.push(prod);
+    actualizarCantidad(id, 1);
 }
 
-function actualizarVista() {
-    let total = 0;
-
-    productos.forEach(prod => {
-        const cantidad = carrito[prod.id]?.cantidad || 0;
-        document.getElementById(`cantidad-${prod.id}`).innerText = cantidad;
-        total += cantidad;
-    });
-
-    contadorVisual.innerText = total;
-}
-
-function seleccionarEntrega(tipo) {
-    tipoEntrega = tipo;
-
-    document.getElementById("btn-retiro").classList.remove("activo");
-    document.getElementById("btn-delivery").classList.remove("activo");
-
-    if (tipo === "retiro") {
-        document.getElementById("btn-retiro").classList.add("activo");
-        document.getElementById("campo-direccion").style.display = "none";
-    } else {
-        document.getElementById("btn-delivery").classList.add("activo");
-        document.getElementById("campo-direccion").style.display = "block";
+function restar(id) {
+    const index = carrito.findIndex(p => p.id === id);
+    if (index !== -1) {
+        carrito.splice(index, 1);
+        actualizarCantidad(id, -1);
     }
 }
 
-function usarUbicacion() {
-    if (!navigator.geolocation) {
-        alert("Tu dispositivo no permite ubicación");
-        return;
-    }
+function actualizarCantidad(id, cambio) {
+    const span = document.getElementById(`cant-${id}`);
+    let valor = parseInt(span.innerText);
+    valor += cambio;
+    if (valor < 0) valor = 0;
+    span.innerText = valor;
 
-    navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
-
-            ubicacionCliente = `https://www.google.com/maps?q=${lat},${lon}`;
-
-            alert("Ubicación capturada 📍");
-        },
-        () => {
-            alert("No se pudo obtener la ubicación");
-        }
-    );
+    contador.innerText = carrito.length;
 }
 
 function enviarPedido() {
-    const items = Object.values(carrito);
-
-    if (items.length === 0) {
-        alert("Agregá productos primero");
+    if (carrito.length === 0) {
+        alert("El pedido está vacío");
         return;
     }
 
-    let mensaje = "🍻 AV Drinks 🍻\n\n";
+    let mensaje = "Hola AV Drinks, quiero:%0A%0A";
     let total = 0;
 
-    items.forEach(item => {
-        let sub = item.precio * item.cantidad;
-        mensaje += `${item.cantidad}x ${item.nombre} - $${sub}\n`;
-        total += sub;
+    const resumen = {};
+
+    carrito.forEach(p => {
+        resumen[p.nombre] = (resumen[p.nombre] || 0) + 1;
+        total += p.precio;
     });
 
-    mensaje += `\nTotal: $${total}\n\n`;
-
-    if (tipoEntrega === "retiro") {
-        mensaje += "🏠 Retiro en el local\n";
-    } else {
-        const dir = document.getElementById("direccion").value;
-
-        mensaje += "🚚 Delivery\n";
-
-        if (ubicacionCliente) {
-            mensaje += `📍 Ubicación: ${ubicacionCliente}\n`;
-        } else if (dir) {
-            mensaje += `📍 Dirección: ${dir}\n`;
-        } else {
-            alert("Poné dirección o usá ubicación");
-            return;
-        }
-
-        mensaje += "💰 Envío a confirmar\n";
+    for (let nombre in resumen) {
+        mensaje += `*${resumen[nombre]}x* ${nombre}%0A`;
     }
 
-    const telefono = "5492634351883";
+    mensaje += `%0ATotal: $${total}`;
 
-    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`);
+    const telefono = "5492634351883";
+    window.open(`https://wa.me/${telefono}?text=${mensaje}`);
 }
 
 cargarProductos();
