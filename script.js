@@ -98,4 +98,22 @@ function enviarPedido() {
     window.open(`https://wa.me/${telefono}?text=${mensaje}`);
 }
 
-cargarProductos();
+async function cargarProductos() {
+    const res = await fetch(URL_SHEET);
+    const data = await res.text();
+
+    const filas = data.trim().split("\n").slice(1);
+
+    productos = filas.map(fila => {
+        const columnas = fila.split(",");
+
+        return {
+            id: parseInt(columnas[0]?.trim()),
+            nombre: columnas[1]?.trim(),
+            precio: parseInt(columnas[2]?.trim()),
+            img: columnas[3]?.trim()
+        };
+    }).filter(p => p.nombre && !isNaN(p.precio));
+
+    renderProductos();
+}
