@@ -1,5 +1,5 @@
 /* -----------------------------------------
-   AV DRINKS - ESTRUCTURA APP PREMIUM
+   AV DRINKS - ESTRUCTURA APP PREMIUM REPARADA
 -------------------------------------------- */
 
 /* TIPOGRAFÍA */
@@ -15,7 +15,7 @@
 
 html, body {
     width: 100%;
-    overflow-x: hidden; /* Bloquea el movimiento hacia los costados */
+    overflow-x: hidden; 
     position: relative;
 }
 
@@ -23,7 +23,7 @@ body {
     font-family: 'Rajdhani', sans-serif;
     color: white;
     background-color: black;
-    padding-bottom: 120px; /* Espacio para el botón flotante */
+    padding-bottom: 120px;
 }
 
 /* FONDO FIJO */
@@ -33,7 +33,7 @@ body::before {
     inset: 0;
     background: url('img/fondo-bar.jpg') no-repeat center center;
     background-size: cover;
-    filter: brightness(0.2) blur(3px); /* Oscurece el fondo para que resalten los productos */
+    filter: brightness(0.2) blur(3px);
     z-index: -1;
 }
 
@@ -44,7 +44,7 @@ header {
 }
 
 .logo {
-    width: 80px; /* Tamaño optimizado */
+    width: 80px;
     height: auto;
     margin-bottom: 8px;
     filter: drop-shadow(0 0 8px rgba(0, 234, 255, 0.6));
@@ -64,16 +64,16 @@ h1 {
     opacity: 0.9;
 }
 
-/* 🔥 GRID DE 2 COLUMNAS FIJAS (PERFECTO PARA SCROLL) */
+/* 🔥 GRID DE 2 COLUMNAS FIJAS */
 #contenedor-productos {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Siempre 2 productos por fila */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 12px;
     padding: 12px;
     width: 100%;
 }
 
-/* TARJETA DE PRODUCTO */
+/* TARJETA DE PRODUCTO REFORZADA */
 .tarjeta-producto {
     background: rgba(20, 20, 20, 0.85);
     border-radius: 15px;
@@ -82,40 +82,52 @@ h1 {
     border: 1px solid rgba(0, 255, 255, 0.15);
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Alinea los botones abajo */
+    justify-content: space-between;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    overflow: hidden; /* Evita que imágenes grandes deformen la tarjeta */
 }
 
-/* 🖼️ IMÁGENES UNIFICADAS (TODAS IGUALES) */
-.tarjeta-producto img {
+/* 🖼️ CONTENEDOR DE IMAGEN (EL SECRETO DE LA ALINEACIÓN) */
+.contenedor-imagen {
     width: 100%;
-    height: 110px; /* Altura fija obligatoria */
-    object-fit: contain; /* No deforma la botella */
+    height: 110px; /* Altura fija para todas las tarjetas */
     background: white;
     border-radius: 10px;
     padding: 8px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.tarjeta-producto img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Ajusta la imagen sin deformar */
+    display: block;
 }
 
 .tarjeta-producto h3 {
-    font-size: 15px;
-    min-height: 36px; /* Espacio para nombres largos */
+    font-size: 14px;
+    min-height: 34px;
     margin-bottom: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1.2;
 }
 
 /* 💰 PRECIO DESTACADO */
 .tarjeta-producto p {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
+    font-size: 22px;
     color: #00ffcc;
     margin-bottom: 10px;
     text-shadow: 0 0 5px rgba(0, 255, 204, 0.3);
 }
 
-/* 💎 CONTADOR MEJORADO (MÁS GRANDE) */
+/* 💎 CONTADOR MEJORADO */
 .contador {
     display: flex;
     align-items: center;
@@ -127,7 +139,7 @@ h1 {
 }
 
 .contador button {
-    width: 38px; /* Tamaño cómodo para el pulgar */
+    width: 38px;
     height: 38px;
     border-radius: 8px;
     border: none;
@@ -163,40 +175,3 @@ h1 {
 .opciones button {
     flex: 1;
     padding: 14px;
-    border-radius: 10px;
-    border: 1px solid #00eaff;
-    background: transparent;
-    color: white;
-    font-weight: 700;
-}
-
-.opciones button.activo {
-    background: #00eaff;
-    color: black;
-}
-
-/* 🚀 BOTÓN WHATSAPP FIJO (SIN SCROLL) */
-#btn-whatsapp {
-    position: fixed;
-    bottom: 20px;
-    left: 5%;
-    width: 90%;
-    padding: 18px;
-    background: linear-gradient(45deg, #25d366, #128c7e);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    font-size: 18px;
-    font-weight: 900;
-    text-transform: uppercase;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    z-index: 1000;
-}
-
-/* AJUSTE PARA PANTALLAS PEQUEÑAS */
-@media (max-width: 340px) {
-    #contenedor-productos { gap: 8px; padding: 8px; }
-    .tarjeta-producto { padding: 8px; }
-    .tarjeta-producto h3 { font-size: 13px; }
-    .contador button { width: 32px; height: 32px; }
-}
