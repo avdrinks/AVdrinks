@@ -307,3 +307,73 @@ img {
 
     box-shadow: 0 0 12px #00eaff;
 }
+/* --- AJUSTES FINALES LOGO --- */
+.logo {
+    width: 75px; /* Probá con este tamaño, queda flama */
+    height: auto;
+    display: block;
+    margin: 0 auto 5px;
+    filter: drop-shadow(0 0 8px rgba(0, 234, 255, 0.5));
+}
+
+header {
+    padding-top: 15px; 
+    padding-bottom: 10px;
+}
+
+.tagline {
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-top: -5px;
+}
+/* 💎 MEJORA VISUAL BOTONES + / - */
+.contador button {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px; /* Menos redondo, más tecno */
+    border: 1px solid rgba(0, 234, 255, 0.4);
+    
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    
+    /* Fondo con degradado sutil y oscuro */
+    background: linear-gradient(145deg, #1a1a1a, #000000);
+    color: #00eaff; /* Letras color neón */
+    
+    /* Brillo exterior e interior */
+    box-shadow: 0 0 10px rgba(0, 234, 255, 0.2);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+/* Efecto al presionar (Touch) */
+.contador button:active {
+    transform: scale(0.9);
+    background: #00eaff;
+    color: #000; /* Invierte colores al tocar */
+    box-shadow: 0 0 20px #00eaff;
+}
+
+/* El número central */
+.contador span {
+    min-width: 30px;
+    font-family: 'Bebas Neue', sans-serif; /* Usamos la fuente del título */
+    font-size: 18px;
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+/* Ajuste del contenedor del contador */
+.contador {
+    background: rgba(255, 255, 255, 0.05); /* Fondo casi invisible */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 12px;
+    backdrop-filter: blur(2px);
+}
