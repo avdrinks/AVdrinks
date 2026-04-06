@@ -223,3 +223,22 @@ h1 {
         font-size: 22px;
     }
 }
+.contador {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.contador button {
+    background: #00ffcc;
+    border: none;
+    padding: 5px 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.contador span {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
