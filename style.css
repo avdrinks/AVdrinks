@@ -189,3 +189,44 @@ h1 {
 .opciones button {
     flex: 1;
     padding: 14px;
+/* --- EL GLOW DE LOS BOTONES DE ENTREGA --- */
+.opciones button.activo {
+    background: linear-gradient(45deg, #00eaff, #00ffcc) !important;
+    color: black !important;
+    font-weight: 800;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 234, 255, 0.8) !important;
+    transform: scale(1.05);
+}
+
+/* --- EL GLOW DE LA UBICACIÓN --- */
+.btn-ubicacion.activo {
+    background: #25d366 !important; /* Color WhatsApp para avisar que está OK */
+    color: white !important;
+    border: none;
+    box-shadow: 0 0 15px rgba(37, 211, 102, 0.6);
+}
+
+/* --- ESTILO DEL BOTÓN WHATSAPP ABAJO --- */
+#btn-whatsapp {
+    position: fixed;
+    bottom: 20px;
+    left: 5%;
+    width: 90%;
+    padding: 18px;
+    background: linear-gradient(45deg, #00eaff, #00ffcc); /* Volvemos al color AV Drinks */
+    color: black;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(0, 234, 255, 0.5);
+    z-index: 9999;
+    cursor: pointer;
+}
+
+#btn-whatsapp:active {
+    transform: translateX(-50%) scale(0.95); /* Para que no se mueva de lugar al tocar */
+    box-shadow: 0 0 30px #00eaff;
+}
