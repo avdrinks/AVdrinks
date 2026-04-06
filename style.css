@@ -1,7 +1,18 @@
 body {
-    /* Un degradado oscuro que va de negro a un azul muy oscuro y toques de neón */
-    background: radial-gradient(circle at center, #1a0033 0%, #0d0d0d 100%);
-    background-color: #0d0d0d; /* Color de fondo base */
+    background-image: url('img/fondo-bar.jpg'); /* Tu imagen */
+    background-size: cover; /* Para que cubra toda la pantalla */
+    background-position: center; /* Centrada */
+    background-attachment: fixed; /* Esto hace que el fondo no se mueva al hacer scroll, queda muy profesional */
+}
+
+/* IMPORTANTE: Si pones una imagen de fondo, necesitas oscurecerla 
+   para que el texto se siga leyendo bien */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Una capa negra al 70% de opacidad */
+    z-index: -1; /* Detrás del contenido */
 }
 
 .logo {
