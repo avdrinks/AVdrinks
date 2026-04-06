@@ -1,5 +1,5 @@
-/* IMPORTAR TIPOGRAFÍA PRO */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap');
+/* TIPOGRAFÍAS PRO */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Rajdhani:wght@400;600&display=swap');
 
 /* RESET */
 * {
@@ -8,53 +8,56 @@
     box-sizing: border-box;
 }
 
-/* BODY */
+/* BODY BASE */
 body {
     font-family: 'Rajdhani', sans-serif;
-    color: #ffffff;
-
-    background: url('img/fondo-bar.jpg') no-repeat center center fixed;
-    background-size: cover;
-
+    color: white;
     min-height: 100vh;
+    background-color: black;
 }
 
-/* CAPA OSCURA PARA PROFESIONALISMO */
+/* 🔥 FONDO (FUNCIONA EN CELULAR) */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: url('img/fondo-bar.jpg') no-repeat center center;
+    background-size: cover;
+    z-index: -2;
+}
+
+/* CAPA OSCURA PRO */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(4px);
     z-index: -1;
 }
 
 /* HEADER */
 header {
     text-align: center;
-    padding: 30px 20px;
+    padding: 25px;
 }
 
-/* TITULO NEON */
 h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 38px;
-    letter-spacing: 3px;
     color: #00eaff;
+    font-size: 32px;
+    letter-spacing: 2px;
 
     text-shadow:
         0 0 5px #00eaff,
-        0 0 10px #00eaff,
-        0 0 20px #00eaff,
-        0 0 40px #00eaff;
+        0 0 15px #00eaff,
+        0 0 30px #00eaff;
 }
 
-/* SUBTITULO */
 .tagline {
-    margin-top: 5px;
-    font-size: 18px;
     color: #00eaff;
-    opacity: 0.8;
+    opacity: 0.7;
+    font-size: 16px;
 }
 
 /* CONTADOR */
@@ -64,20 +67,23 @@ h1 {
     font-size: 18px;
 }
 
-/* GRID PRODUCTOS */
+/* 🔥 GRID PRODUCTOS */
 #contenedor-productos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: 1fr;
     gap: 20px;
-    padding: 20px;
+    padding: 15px;
 }
 
-/* TARJETAS */
+/* TARJETA PRODUCTO */
 .tarjeta-producto {
-    background: rgba(0,0,0,0.65);
+    background: rgba(0,0,0,0.6);
     border-radius: 15px;
     padding: 15px;
     text-align: center;
+
+    max-width: 350px;
+    margin: auto;
 
     border: 1px solid rgba(0,255,255,0.3);
 
@@ -85,33 +91,43 @@ h1 {
         0 0 10px rgba(0,255,255,0.2),
         inset 0 0 10px rgba(0,255,255,0.1);
 
-    transition: 0.3s;
+    overflow: hidden;
 }
 
-.tarjeta-producto:hover {
-    transform: scale(1.05);
-    box-shadow:
-        0 0 20px rgba(0,255,255,0.5),
-        inset 0 0 20px rgba(0,255,255,0.3);
-}
-
-/* IMAGEN PRODUCTO */
+/* 💥 FIX DEFINITIVO IMÁGENES */
 .tarjeta-producto img {
-    width: 100%;
-    max-width: 150px;   /* 🔥 LIMITE REAL */
-    height: 120px;
-    object-fit: contain;
-    margin: 0 auto;
+    width: 100% !important;
+    max-width: 180px !important;
+    height: 160px !important;
+
+    object-fit: contain !important;
+
     display: block;
+    margin: 0 auto 10px auto;
+
+    background: white;
+    border-radius: 10px;
+    padding: 5px;
 }
 
-/* PRECIO */
-.tarjeta-producto p {
+/* POR SI EL PANEL METE COSAS RARAS */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* TEXTO PRODUCTO */
+.tarjeta-producto h3 {
     font-size: 18px;
-    color: #00ffcc;
+    margin-bottom: 5px;
 }
 
-/* BOTONES + - */
+.tarjeta-producto p {
+    color: #00ffcc;
+    font-size: 16px;
+}
+
+/* CONTADOR + - */
 .contador {
     display: flex;
     justify-content: center;
@@ -138,8 +154,8 @@ h1 {
 
 /* SECCIÓN ENTREGA */
 .tipo-entrega {
-    padding: 20px;
     text-align: center;
+    padding: 20px;
 }
 
 /* BOTONES ENTREGA */
@@ -152,13 +168,12 @@ h1 {
 .opciones button {
     flex: 1;
     padding: 12px;
-    border: none;
     border-radius: 10px;
-    background: rgba(0,0,0,0.7);
+    border: 1px solid #00eaff;
+    background: transparent;
     color: white;
     cursor: pointer;
 
-    border: 1px solid #00eaff;
     opacity: 0.5;
     transition: 0.3s;
 }
@@ -174,13 +189,13 @@ h1 {
 #direccion {
     width: 90%;
     padding: 10px;
+    margin-top: 10px;
     border-radius: 10px;
     border: none;
-    margin-top: 10px;
     text-align: center;
 }
 
-/* BOTON UBICACION */
+/* BOTÓN UBICACIÓN */
 .btn-ubicacion {
     margin-top: 10px;
     padding: 10px;
@@ -191,7 +206,7 @@ h1 {
     cursor: pointer;
 }
 
-/* BOTÓN WHATSAPP */
+/* 🔥 BOTÓN WHATSAPP */
 #btn-whatsapp {
     position: fixed;
     bottom: 15px;
@@ -217,18 +232,15 @@ h1 {
         0 0 30px #00eaff;
 }
 
-/* MOBILE PERFECTO */
+/* 📱 MOBILE */
 @media (max-width: 600px) {
 
     h1 {
-        font-size: 28px;
-    }
-
-    #contenedor-productos {
-        grid-template-columns: 1fr;
+        font-size: 26px;
     }
 
     .tarjeta-producto img {
-        height: 120px;
+        max-width: 150px !important;
+        height: 140px !important;
     }
 }
