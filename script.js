@@ -1,31 +1,16 @@
-// ==========================
-// PRODUCTOS
-// ==========================
 const productos = [
-    { id: 1, nombre: "Fernet Branca 750ml", precio: 8500, img: "img/fernet.png" },
+    { id: 1, nombre: "FERNET + COCA + HIELO", precio: 19500, img: "img/fernet.png" },
     { id: 2, nombre: "Cerveza Lata 473ml", precio: 1800, img: "img/cerveza.png" },
-    { id: 3, nombre: "Gaseosa Cola 2.25L", precio: 2500, img: "img/cola.png" }
+    { id: 3, nombre: "Gaseosa 2.25L", precio: 2500, img: "img/cola.png" }
 ];
 
-// ==========================
-// CARRITO
-// ==========================
 let carrito = {};
-
-// ==========================
-// TIPO DE ENTREGA
-// ==========================
 let tipoEntrega = "retiro";
+let ubicacionCliente = null;
 
-// ==========================
-// ELEMENTOS DEL DOM
-// ==========================
 const contenedor = document.getElementById('contenedor-productos');
 const contadorVisual = document.getElementById('contador-productos');
 
-// ==========================
-// CARGAR PRODUCTOS
-// ==========================
 function cargarProductos() {
     contenedor.innerHTML = "";
 
@@ -34,7 +19,7 @@ function cargarProductos() {
         div.classList.add('tarjeta-producto');
 
         div.innerHTML = `
-            <img src="${prod.img}" alt="${prod.nombre}" onerror="this.src='https://via.placeholder.com/150?text=Drink'">
+            <img src="${prod.img}" onerror="this.src='https://via.placeholder.com/150'">
             <h3>${prod.nombre}</h3>
             <p>$${prod.precio}</p>
 
@@ -49,9 +34,6 @@ function cargarProductos() {
     });
 }
 
-// ==========================
-// CAMBIAR CANTIDAD (+ / -)
-// ==========================
 function cambiarCantidad(id, cambio) {
     const producto = productos.find(p => p.id === id);
 
@@ -68,97 +50,95 @@ function cambiarCantidad(id, cambio) {
     actualizarVista();
 }
 
-// ==========================
-// ACTUALIZAR UI
-// ==========================
 function actualizarVista() {
-    let totalItems = 0;
+    let total = 0;
 
     productos.forEach(prod => {
         const cantidad = carrito[prod.id]?.cantidad || 0;
-
-        const span = document.getElementById(`cantidad-${prod.id}`);
-        if (span) span.innerText = cantidad;
-
-        totalItems += cantidad;
+        document.getElementById(`cantidad-${prod.id}`).innerText = cantidad;
+        total += cantidad;
     });
 
-    contadorVisual.innerText = totalItems;
+    contadorVisual.innerText = total;
 }
 
-// ==========================
-// SELECCIONAR ENTREGA
-// ==========================
 function seleccionarEntrega(tipo) {
     tipoEntrega = tipo;
 
-    const btnRetiro = document.getElementById("btn-retiro");
-    const btnDelivery = document.getElementById("btn-delivery");
-    const campoDireccion = document.getElementById("campo-direccion");
-
-    btnRetiro.classList.remove("activo");
-    btnDelivery.classList.remove("activo");
+    document.getElementById("btn-retiro").classList.remove("activo");
+    document.getElementById("btn-delivery").classList.remove("activo");
 
     if (tipo === "retiro") {
-        btnRetiro.classList.add("activo");
-        campoDireccion.style.display = "none";
+        document.getElementById("btn-retiro").classList.add("activo");
+        document.getElementById("campo-direccion").style.display = "none";
     } else {
-        btnDelivery.classList.add("activo");
-        campoDireccion.style.display = "block";
+        document.getElementById("btn-delivery").classList.add("activo");
+        document.getElementById("campo-direccion").style.display = "block";
     }
 }
 
-// ==========================
-// ENVIAR PEDIDO A WHATSAPP
-// ==========================
+function usarUbicacion() {
+    if (!navigator.geolocation) {
+        alert("Tu dispositivo no permite ubicación");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+
+            ubicacionCliente = `https://www.google.com/maps?q=${lat},${lon}`;
+
+            alert("Ubicación capturada 📍");
+        },
+        () => {
+            alert("No se pudo obtener la ubicación");
+        }
+    );
+}
+
 function enviarPedido() {
     const items = Object.values(carrito);
 
     if (items.length === 0) {
-        alert("El pedido está vacío. ¡Agregá algo para tomar!");
+        alert("Agregá productos primero");
         return;
     }
 
-    let mensaje = "🍻 *AV Drinks* 🍻\n\n";
-    mensaje += "Quiero hacer un pedido:\n\n";
-
+    let mensaje = "🍻 AV Drinks 🍻\n\n";
     let total = 0;
 
     items.forEach(item => {
-        const subtotal = item.precio * item.cantidad;
-        mensaje += `*${item.cantidad}x* ${item.nombre} - $${subtotal}\n`;
-        total += subtotal;
+        let sub = item.precio * item.cantidad;
+        mensaje += `${item.cantidad}x ${item.nombre} - $${sub}\n`;
+        total += sub;
     });
 
-    mensaje += `\n*Total productos: $${total}*\n\n`;
+    mensaje += `\nTotal: $${total}\n\n`;
 
-    // ==========================
-    // ENTREGA
-    // ==========================
     if (tipoEntrega === "retiro") {
-        mensaje += "📍 Retiro en el local\n";
+        mensaje += "🏠 Retiro en el local\n";
     } else {
-        const direccion = document.getElementById("direccion").value;
+        const dir = document.getElementById("direccion").value;
 
-        if (!direccion) {
-            alert("Por favor escribí tu dirección para el delivery");
+        mensaje += "🚚 Delivery\n";
+
+        if (ubicacionCliente) {
+            mensaje += `📍 Ubicación: ${ubicacionCliente}\n`;
+        } else if (dir) {
+            mensaje += `📍 Dirección: ${dir}\n`;
+        } else {
+            alert("Poné dirección o usá ubicación");
             return;
         }
 
-        mensaje += "🚚 Delivery\n";
-        mensaje += `📍 Dirección: ${direccion}\n`;
-        mensaje += "💰 (Consultar costo de envío)\n";
+        mensaje += "💰 Envío a confirmar\n";
     }
-
-    mensaje += "\n¿Me confirmás el pedido?";
 
     const telefono = "5492634351883";
 
-    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`);
 }
 
-// ==========================
-// INICIAR APP
-// ==========================
 cargarProductos();
