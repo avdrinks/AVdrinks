@@ -6,7 +6,7 @@ let tipoEntrega = null;
 let ubicacionLink = "";
 
 const contenedor = document.getElementById("contenedor-productos");
-const contador = document.getElementById("contador-productos");
+const contadorHeader = document.getElementById("contador-productos");
 const btnWhatsapp = document.getElementById("btn-whatsapp");
 
 // =========================
@@ -29,25 +29,29 @@ async function cargarProductos() {
         renderProductos();
 
     } catch (error) {
-        alert("Error cargando productos");
+        console.error("Error:", error);
+        alert("Error cargando el catálogo de AV Drinks");
     }
 }
 
 // =========================
-// RENDER
+// RENDER (REPARADO PARA EL NUEVO CSS)
 // =========================
 function renderProductos() {
     contenedor.innerHTML = "";
 
     productos.forEach(prod => {
         const div = document.createElement("div");
+        div.classList.add("tarjeta-producto"); // Añadimos la clase para el CSS
 
         div.innerHTML = `
-            <img src="${prod.img}">
+            <div class="contenedor-imagen">
+                <img src="${prod.img}" alt="${prod.nombre}" onerror="this.src='img/placeholder.png'">
+            </div>
             <h3>${prod.nombre}</h3>
             <p>$${prod.precio}</p>
 
-            <div>
+            <div class="contador">
                 <button onclick="restar(${prod.id})">-</button>
                 <span id="cant-${prod.id}">0</span>
                 <button onclick="sumar(${prod.id})">+</button>
@@ -59,30 +63,37 @@ function renderProductos() {
 }
 
 // =========================
-// CARRITO
+// LÓGICA DEL CARRITO
 // =========================
 function sumar(id) {
     const prod = productos.find(p => p.id === id);
-    carrito.push(prod);
-    actualizarCantidad(id, 1);
-}
-
-function restar(id) {
-    const index = carrito.findIndex(p => p.id === id);
-    if (index !== -1) {
-        carrito.splice(index, 1);
-        actualizarCantidad(id, -1);
+    if (prod) {
+        carrito.push(prod);
+        actualizarInterfaz(id);
     }
 }
 
-function actualizarCantidad(id, cambio) {
-    const span = document.getElementById(`cant-${id}`);
-    let valor = Number(span.innerText);
-    valor += cambio;
-    if (valor < 0) valor = 0;
+function restar(id) {
+    const index = carrito.findLastIndex(p => p.id === id);
+    if (index !== -1) {
+        carrito.splice(index, 1);
+        actualizarInterfaz(id);
+    }
+}
 
-    span.innerText = valor;
-    contador.innerText = carrito.length;
+function actualizarInterfaz(id) {
+    // Actualizar cantidad individual en la tarjeta
+    const span = document.getElementById(`cant-${id}`);
+    const cantidadActual = carrito.filter(p => p.id === id).length;
+    
+    if (span) {
+        span.innerText = cantidadActual;
+    }
+    
+    // Actualizar contador total en el header
+    if (contadorHeader) {
+        contadorHeader.innerText = carrito.length;
+    }
 }
 
 // =========================
@@ -106,74 +117,87 @@ function seleccionarEntrega(tipo) {
         btnDelivery.classList.add("activo");
         campo.style.display = "block";
     }
-
-    btnWhatsapp.disabled = false;
 }
 
 // =========================
-// UBICACION
+// UBICACIÓN (LINK CORREGIDO)
 // =========================
 function usarUbicacion() {
+    if (!navigator.geolocation) {
+        alert("Tu navegador no soporta geolocalización");
+        return;
+    }
+
     navigator.geolocation.getCurrentPosition(pos => {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
 
+        // URL corregida para Google Maps
         ubicacionLink = `https://www.google.com/maps?q=${lat},${lon}`;
-        alert("Ubicación cargada ✔");
+        
+        const btnUbi = document.querySelector(".btn-ubicacion");
+        btnUbi.innerHTML = "📍 Ubicación Cargada ✔";
+        btnUbi.classList.add("activo");
+        alert("Ubicación obtenida correctamente");
+    }, error => {
+        alert("No se pudo obtener la ubicación. Por favor, escribí tu dirección.");
     });
 }
 
 // =========================
-// ENVIAR
+// ENVIAR PEDIDO A WHATSAPP
 // =========================
 function enviarPedido() {
+    if (carrito.length === 0) {
+        alert("¡El carrito está vacío! Agregá algunas bebidas.");
+        return;
+    }
 
     if (!tipoEntrega) {
-        alert("Seleccioná Retiro o Delivery");
+        alert("Por favor, seleccioná si es Retiro o Delivery.");
         return;
     }
 
-    if (carrito.length === 0) {
-        alert("Agregá productos");
-        return;
-    }
-
-    let mensaje = "Hola AV Drinks, quiero:%0A%0A";
+    let mensaje = "🚀 *NUEVO PEDIDO - AV DRINKS*%0A%0A";
     let total = 0;
     const resumen = {};
 
+    // Agrupar productos por nombre
     carrito.forEach(p => {
         resumen[p.nombre] = (resumen[p.nombre] || 0) + 1;
         total += p.precio;
     });
 
+    // Listar productos
     for (let nombre in resumen) {
-        mensaje += `*${resumen[nombre]}x* ${nombre}%0A`;
+        mensaje += `• *${resumen[nombre]}x* ${nombre}%0A`;
     }
 
-    mensaje += `%0A*Total: $${total}*%0A%0A`;
+    mensaje += `%0A💰 *TOTAL A PAGAR: $${total}*%0A`;
+    mensaje += `────────────────────%0A`;
 
     if (tipoEntrega === "delivery") {
         const direccion = document.getElementById("direccion").value;
-
-        mensaje += "🚚 Delivery%0A";
+        mensaje += "🛵 *MODO:* Delivery%0A";
 
         if (ubicacionLink) {
-            mensaje += `📍 ${ubicacionLink}%0A`;
-        } else if (direccion) {
-            mensaje += `📍 ${direccion}%0A`;
+            mensaje += `📍 *Ubicación:* ${ubicacionLink}%0A`;
+        } else if (direccion.trim() !== "") {
+            mensaje += `🏠 *Dirección:* ${direccion}%0A`;
         } else {
-            alert("Poné dirección o ubicación");
+            alert("Para delivery, necesitamos tu ubicación o dirección escrita.");
             return;
         }
-
     } else {
-        mensaje += "🏠 Retiro en local%0A";
+        mensaje += "🏠 *MODO:* Retiro en local%0A";
     }
 
     const telefono = "5492634351883";
-    window.open(`https://wa.me/${telefono}?text=${mensaje}`);
+    const urlWa = `https://wa.me/${telefono}?text=${mensaje}`;
+    window.open(urlWa, "_blank");
 }
 
+// =========================
+// INICIO
 // =========================
 cargarProductos();
