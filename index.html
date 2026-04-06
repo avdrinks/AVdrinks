@@ -4,7 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AV DRINKS</title>
-    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #0a0a0a;
+            color: white;
+            text-align: center;
+        }
+
+        .logo {
+            width: 120px;
+        }
+
+        #contenedor-productos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .tarjeta-producto {
+            background: #111;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .tarjeta-producto img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .contador button {
+            padding: 5px 10px;
+            margin: 5px;
+        }
+
+        .tipo-entrega {
+            margin-top: 20px;
+        }
+
+        .opciones button {
+            padding: 10px;
+            margin: 5px;
+            opacity: 0.5;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .opciones button.activo {
+            opacity: 1;
+            border: 2px solid #00aaff;
+        }
+
+        #btn-whatsapp {
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 18px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 10px;
+        }
+
+        #btn-whatsapp:disabled {
+            background: gray;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,7 +81,7 @@
     <p>Delivery de Bebidas</p>
 </header>
 
-<div class="carrito-info">
+<div>
     🛒 Productos: <span id="contador-productos">0</span>
 </div>
 
@@ -25,20 +91,18 @@
     <h3>Entrega</h3>
 
     <div class="opciones">
-        <button id="btn-retiro" class="activo" onclick="seleccionarEntrega('retiro')">🏠 Retiro</button>
+        <button id="btn-retiro" onclick="seleccionarEntrega('retiro')">🏠 Retiro</button>
         <button id="btn-delivery" onclick="seleccionarEntrega('delivery')">🚚 Delivery</button>
     </div>
 
     <div id="campo-direccion" style="display:none;">
-        <button class="btn-ubicacion" onclick="usarUbicacion()">📍 Usar mi ubicación</button>
-
+        <button onclick="usarUbicacion()">📍 Usar mi ubicación</button>
         <p>o escribir dirección:</p>
-
         <input type="text" id="direccion" placeholder="Barrio, calle, referencia">
     </div>
 </div>
 
-<button id="btn-whatsapp" onclick="enviarPedido()">
+<button id="btn-whatsapp" onclick="enviarPedido()" disabled>
     Pedir por WhatsApp
 </button>
 
