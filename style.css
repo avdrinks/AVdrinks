@@ -13,7 +13,7 @@ body {
     font-family: 'Rajdhani', sans-serif;
     color: #ffffff;
 
-    background: url('fondo-bar.jpg') no-repeat center center fixed;
+    background: url('img/fondo-bar.jpg') no-repeat center center fixed;
     background-size: cover;
 
     min-height: 100vh;
