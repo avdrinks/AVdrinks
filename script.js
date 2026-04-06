@@ -1,69 +1,164 @@
+// ==========================
+// PRODUCTOS
+// ==========================
 const productos = [
     { id: 1, nombre: "Fernet Branca 750ml", precio: 8500, img: "img/fernet.png" },
     { id: 2, nombre: "Cerveza Lata 473ml", precio: 1800, img: "img/cerveza.png" },
     { id: 3, nombre: "Gaseosa Cola 2.25L", precio: 2500, img: "img/cola.png" }
 ];
 
-let carrito = [];
+// ==========================
+// CARRITO
+// ==========================
+let carrito = {};
 
-// Elementos del DOM
+// ==========================
+// TIPO DE ENTREGA
+// ==========================
+let tipoEntrega = "retiro";
+
+// ==========================
+// ELEMENTOS DEL DOM
+// ==========================
 const contenedor = document.getElementById('contenedor-productos');
 const contadorVisual = document.getElementById('contador-productos');
 
+// ==========================
+// CARGAR PRODUCTOS
+// ==========================
 function cargarProductos() {
-    contenedor.innerHTML = ""; // Limpiar antes de cargar
+    contenedor.innerHTML = "";
+
     productos.forEach(prod => {
         const div = document.createElement('div');
         div.classList.add('tarjeta-producto');
+
         div.innerHTML = `
             <img src="${prod.img}" alt="${prod.nombre}" onerror="this.src='https://via.placeholder.com/150?text=Drink'">
             <h3>${prod.nombre}</h3>
             <p>$${prod.precio}</p>
-            <button onclick="agregarAlCarrito(${prod.id})">Agregar al pedido</button>
+
+            <div class="contador">
+                <button onclick="cambiarCantidad(${prod.id}, -1)">-</button>
+                <span id="cantidad-${prod.id}">0</span>
+                <button onclick="cambiarCantidad(${prod.id}, 1)">+</button>
+            </div>
         `;
+
         contenedor.appendChild(div);
     });
 }
 
-function agregarAlCarrito(id) {
+// ==========================
+// CAMBIAR CANTIDAD (+ / -)
+// ==========================
+function cambiarCantidad(id, cambio) {
     const producto = productos.find(p => p.id === id);
-    carrito.push(producto);
-    
-    // Actualizar el contador visual
-    contadorVisual.innerText = carrito.length;
-    
-    // Efecto visual opcional: que el botón brille al agregar
-    const btn = document.getElementById('btn-whatsapp');
-    btn.style.transform = "translateX(-50%) scale(1.05)";
-    setTimeout(() => btn.style.transform = "translateX(-50%) scale(1)", 200);
+
+    if (!carrito[id]) {
+        carrito[id] = { ...producto, cantidad: 0 };
+    }
+
+    carrito[id].cantidad += cambio;
+
+    if (carrito[id].cantidad <= 0) {
+        delete carrito[id];
+    }
+
+    actualizarVista();
 }
 
+// ==========================
+// ACTUALIZAR UI
+// ==========================
+function actualizarVista() {
+    let totalItems = 0;
+
+    productos.forEach(prod => {
+        const cantidad = carrito[prod.id]?.cantidad || 0;
+
+        const span = document.getElementById(`cantidad-${prod.id}`);
+        if (span) span.innerText = cantidad;
+
+        totalItems += cantidad;
+    });
+
+    contadorVisual.innerText = totalItems;
+}
+
+// ==========================
+// SELECCIONAR ENTREGA
+// ==========================
+function seleccionarEntrega(tipo) {
+    tipoEntrega = tipo;
+
+    const btnRetiro = document.getElementById("btn-retiro");
+    const btnDelivery = document.getElementById("btn-delivery");
+    const campoDireccion = document.getElementById("campo-direccion");
+
+    btnRetiro.classList.remove("activo");
+    btnDelivery.classList.remove("activo");
+
+    if (tipo === "retiro") {
+        btnRetiro.classList.add("activo");
+        campoDireccion.style.display = "none";
+    } else {
+        btnDelivery.classList.add("activo");
+        campoDireccion.style.display = "block";
+    }
+}
+
+// ==========================
+// ENVIAR PEDIDO A WHATSAPP
+// ==========================
 function enviarPedido() {
-    if (carrito.length === 0) {
+    const items = Object.values(carrito);
+
+    if (items.length === 0) {
         alert("El pedido está vacío. ¡Agregá algo para tomar!");
         return;
     }
 
-    let mensaje = "Hola AV Drinks, quiero hacer un pedido:%0A%0A";
+    let mensaje = "🍻 *AV Drinks* 🍻\n\n";
+    mensaje += "Quiero hacer un pedido:\n\n";
+
     let total = 0;
 
-    // Agrupamos productos repetidos para que el mensaje sea corto
-    const resumen = {};
-    carrito.forEach(item => {
-        resumen[item.nombre] = (resumen[item.nombre] || 0) + 1;
-        total += item.precio;
+    items.forEach(item => {
+        const subtotal = item.precio * item.cantidad;
+        mensaje += `*${item.cantidad}x* ${item.nombre} - $${subtotal}\n`;
+        total += subtotal;
     });
 
-    for (const nombre in resumen) {
-        mensaje += `*${resumen[nombre]}x* ${nombre}%0A`;
+    mensaje += `\n*Total productos: $${total}*\n\n`;
+
+    // ==========================
+    // ENTREGA
+    // ==========================
+    if (tipoEntrega === "retiro") {
+        mensaje += "📍 Retiro en el local\n";
+    } else {
+        const direccion = document.getElementById("direccion").value;
+
+        if (!direccion) {
+            alert("Por favor escribí tu dirección para el delivery");
+            return;
+        }
+
+        mensaje += "🚚 Delivery\n";
+        mensaje += `📍 Dirección: ${direccion}\n`;
+        mensaje += "💰 (Consultar costo de envío)\n";
     }
 
-    mensaje += `%0A*Total: $${total}*%0A%0A¿Me confirman el pedido?`;
-    
-    // Tu número configurado correctamente
-    const telefono = "5492634351883"; 
-    window.open(`https://wa.me/${telefono}?text=${mensaje}`, '_blank');
+    mensaje += "\n¿Me confirmás el pedido?";
+
+    const telefono = "5492634351883";
+
+    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
 }
 
-// Iniciar
+// ==========================
+// INICIAR APP
+// ==========================
 cargarProductos();
