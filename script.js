@@ -1,4 +1,4 @@
-const URL_API = "PEGÁ_ACÁ_TU_URL";
+const URL_API = "https://script.google.com/macros/s/AKfycbwrlaCzciec-YG2mu9TbdPTl-oSmlLRlH4yXSrWa7cchOfnHLaGwHuzRjhHDhRyvSJ4/exec";
 
 let productos = [];
 let carrito = [];
