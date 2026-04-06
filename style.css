@@ -264,3 +264,46 @@ img {
         font-size: 32px;
     }
 }
+/* BOTÓN UBICACIÓN PRO (MISMO ESTILO QUE LA APP) */
+.btn-ubicacion {
+    margin-top: 10px;
+
+    width: 100%;
+    max-width: 350px;
+    padding: 12px;
+
+    border-radius: 12px;
+    border: 1px solid rgba(0,255,255,0.25);
+
+    background: rgba(0,0,0,0.6);
+    color: #00eaff;
+
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    cursor: pointer;
+    transition: 0.2s;
+
+    box-shadow:
+        0 0 10px rgba(0,234,255,0.2),
+        inset 0 0 8px rgba(0,234,255,0.1);
+}
+
+/* HOVER / TOUCH */
+.btn-ubicacion:active {
+    transform: scale(0.96);
+}
+
+/* ESTADO ACTIVO (cuando ya obtuvo ubicación) */
+.btn-ubicacion.activo {
+    background: linear-gradient(45deg, #00eaff, #00ffcc);
+    color: black;
+
+    box-shadow: 0 0 12px #00eaff;
+}
