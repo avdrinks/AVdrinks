@@ -1,36 +1,39 @@
-const URL_SHEET = "https://docs.google.com/spreadsheets/d/1_p5_XZAqXt1qyiLfpC08NhmI8iTLel438tMDDD19wWU/edit?usp=drivesdk";
+const URL_API = "PEGÁ_ACÁ_TU_URL";
 
 let productos = [];
 let carrito = [];
 
-const contenedor = document.getElementById('contenedor-productos');
-const contador = document.getElementById('contador-productos');
+const contenedor = document.getElementById("contenedor-productos");
+const contador = document.getElementById("contador-productos");
 
 async function cargarProductos() {
-    const res = await fetch(URL_SHEET);
-    const data = await res.text();
+    try {
+        const res = await fetch(URL_API);
+        const data = await res.json();
 
-    const filas = data.split("\n").slice(1);
+        productos = data
+            .filter(p => p.activo === true || p.activo === "TRUE")
+            .map(p => ({
+                id: Number(p.id),
+                nombre: p.nombre,
+                precio: Number(p.precio),
+                img: p.img
+            }));
 
-    productos = filas.map(fila => {
-        const [id, nombre, precio, img] = fila.split(",");
-        return {
-            id: parseInt(id),
-            nombre,
-            precio: parseInt(precio),
-            img
-        };
-    });
+        renderProductos();
 
-    renderProductos();
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Error cargando productos");
+    }
 }
 
 function renderProductos() {
     contenedor.innerHTML = "";
 
     productos.forEach(prod => {
-        const div = document.createElement('div');
-        div.classList.add('tarjeta-producto');
+        const div = document.createElement("div");
+        div.classList.add("tarjeta-producto");
 
         div.innerHTML = `
             <img src="${prod.img}" onerror="this.src='https://via.placeholder.com/150'">
@@ -64,7 +67,7 @@ function restar(id) {
 
 function actualizarCantidad(id, cambio) {
     const span = document.getElementById(`cant-${id}`);
-    let valor = parseInt(span.innerText);
+    let valor = Number(span.innerText);
     valor += cambio;
     if (valor < 0) valor = 0;
     span.innerText = valor;
@@ -74,7 +77,7 @@ function actualizarCantidad(id, cambio) {
 
 function enviarPedido() {
     if (carrito.length === 0) {
-        alert("El pedido está vacío");
+        alert("Pedido vacío");
         return;
     }
 
@@ -98,22 +101,4 @@ function enviarPedido() {
     window.open(`https://wa.me/${telefono}?text=${mensaje}`);
 }
 
-async function cargarProductos() {
-    const res = await fetch(URL_SHEET);
-    const data = await res.text();
-
-    const filas = data.trim().split("\n").slice(1);
-
-    productos = filas.map(fila => {
-        const columnas = fila.split(",");
-
-        return {
-            id: parseInt(columnas[0]?.trim()),
-            nombre: columnas[1]?.trim(),
-            precio: parseInt(columnas[2]?.trim()),
-            img: columnas[3]?.trim()
-        };
-    }).filter(p => p.nombre && !isNaN(p.precio));
-
-    renderProductos();
-}
+cargarProductos();
