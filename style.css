@@ -73,3 +73,38 @@ h2 {
     object-fit: contain; /* Para que la botella no se estire */
     margin-bottom: 10px;
 }
+/* Color del Nombre del Producto */
+.tarjeta-producto h3 {
+    color: #ffffff; /* Blanco puro para que se lea perfecto */
+    font-size: 1.1rem;
+    margin: 10px 0 5px 0;
+    font-weight: 600;
+    text-transform: uppercase; /* Le da un toque más industrial/brand */
+}
+
+/* Color del Precio */
+.tarjeta-producto p {
+    color: #00ffcc; /* El verde neón para que resalte el valor */
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin: 5px 0;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.4); /* Brillo neón en el precio */
+}
+
+/* El botón de "Agregar" dentro de la tarjeta */
+.tarjeta-producto button {
+    background: transparent;
+    color: #00ffcc;
+    border: 1px solid #00ffcc;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.tarjeta-producto button:hover {
+    background: #00ffcc;
+    color: #000; /* Invierte colores al pasar el mouse */
+}
