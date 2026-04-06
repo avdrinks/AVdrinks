@@ -309,7 +309,7 @@ img {
 }
 /* --- AJUSTES FINALES LOGO --- */
 .logo {
-    width: 75px; /* Probá con este tamaño, queda flama */
+    width: 100px; /* Probá con este tamaño, queda flama */
     height: auto;
     display: block;
     margin: 0 auto 5px;
