@@ -1,11 +1,16 @@
+/* -----------------------------------------
+   AV DRINKS - PREMIUM CSS (REDISEÑADO)
+-------------------------------------------- */
+
 /* TIPOGRAFÍA */
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap');
 
 /* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul al tocar en Android */
 }
 
 /* BODY */
@@ -14,10 +19,11 @@ body {
     color: white;
     min-height: 100vh;
     background-color: black;
-    padding-bottom: 110px; /* espacio para botón */
+    padding-bottom: 110px;
+    overflow-x: hidden;
 }
 
-/* FONDO */
+/* FONDO CON CAPA OSCURA */
 body::after {
     content: "";
     position: fixed;
@@ -27,169 +33,155 @@ body::after {
     z-index: -2;
 }
 
-/* OSCURECER */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(4px);
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
     z-index: -1;
 }
 
-/* HEADER */
+/* HEADER & LOGO */
 header {
     text-align: center;
-    padding: 25px;
+    padding: 20px 15px;
+}
+
+.logo {
+    width: 85px; /* Tamaño ideal achicado */
+    height: auto;
+    display: block;
+    margin: 0 auto 5px;
+    filter: drop-shadow(0 0 10px rgba(0, 234, 255, 0.6));
 }
 
 h1 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 40px;
-    letter-spacing: 3px;
+    font-size: 38px;
+    letter-spacing: 2px;
     color: #00eaff;
-    text-shadow:
-        0 0 5px rgba(0,234,255,0.6),
-        0 0 15px rgba(0,234,255,0.4);
+    text-shadow: 0 0 10px rgba(0,234,255,0.5);
 }
 
 .tagline {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     color: #00eaff;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
-/* CONTADOR GENERAL */
-.carrito-info {
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 18px;
-}
-
-/* 🔥 GRID PRODUCTOS */
+/* 🔥 GRID RESPONSIVE (ARREGLADO) */
 #contenedor-productos {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    /* Si el celular es muy chico pone 1, si no pone 2 */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
     gap: 15px;
     padding: 15px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-/* MOBILE CHICO */
-@media (max-width: 350px) {
-    #contenedor-productos {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* TARJETA */
+/* TARJETA DE PRODUCTO */
 .tarjeta-producto {
-    background: rgba(0,0,0,0.6);
-    border-radius: 15px;
-    padding: 12px;
+    background: rgba(20, 20, 20, 0.7);
+    border-radius: 18px;
+    padding: 15px;
     text-align: center;
-
-    border: 1px solid rgba(0,255,255,0.25);
-
+    border: 1px solid rgba(0, 255, 255, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    box-shadow:
-        0 0 10px rgba(0,255,255,0.15),
-        inset 0 0 10px rgba(0,255,255,0.08);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    transition: transform 0.2s;
 }
 
-/* 🔥 IMAGEN PRO */
+/* IMAGEN DEL PRODUCTO */
 .tarjeta-producto img {
     width: 100%;
-    max-width: 120px;
-    height: 110px;
-
+    height: 120px;
     object-fit: contain;
-
-    margin: 5px auto 10px auto;
-
-    background: white;
-    border-radius: 10px;
-    padding: 5px;
+    margin-bottom: 12px;
+    background: white; /* Mantiene el fondo blanco para las botellas png */
+    border-radius: 12px;
+    padding: 8px;
 }
 
-/* SEGURIDAD */
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-/* TEXTO */
 .tarjeta-producto h3 {
-    font-size: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    min-height: 40px; /* Para que todos los títulos alineen igual */
 }
 
+/* 💰 PRECIO PREMIUM */
 .tarjeta-producto p {
-    font-size: 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; /* Más grande y pro */
     color: #00ffcc;
+    letter-spacing: 1px;
+    background: rgba(0, 255, 204, 0.1);
+    padding: 2px 12px;
+    border-radius: 8px;
+    border: 1px inset rgba(0, 255, 204, 0.2);
+    margin-bottom: 10px;
 }
 
-/* 💎 CONTADOR PRO NIVEL APP */
+/* 💎 CONTADOR PRO (BOTONES + Y - MEJORADOS) */
 .contador {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-top: 10px;
-
-    background: rgba(0,0,0,0.7);
-    border-radius: 30px;
-    padding: 5px 10px;
-
-    border: 1px solid rgba(0,255,255,0.2);
+    gap: 15px;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* BOTONES + - */
 .contador button {
-    width: 30px;
-    height: 30px;
-
-    border-radius: 50%;
+    width: 38px; /* Más grandes para el dedo */
+    height: 38px;
+    border-radius: 10px;
     border: none;
-
-    font-size: 18px;
+    font-size: 22px;
     font-weight: bold;
-
-    background: linear-gradient(145deg, #00eaff, #00ffcc);
-    color: black;
-
-    box-shadow:
-        0 0 8px rgba(0,234,255,0.6),
-        inset 0 0 5px rgba(255,255,255,0.5);
-
     cursor: pointer;
-    transition: 0.15s;
+    background: linear-gradient(145deg, #00eaff, #0099ff);
+    color: black;
+    box-shadow: 0 4px 10px rgba(0,234,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s;
 }
 
-/* EFECTO TOUCH */
 .contador button:active {
     transform: scale(0.85);
+    box-shadow: 0 0 5px #00eaff;
 }
 
-/* NÚMERO */
 .contador span {
-    min-width: 20px;
-    text-align: center;
-
-    font-size: 16px;
-    font-weight: bold;
-
-    color: #00ffcc;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    min-width: 25px;
+    color: white;
 }
 
-/* 🔥 ENTREGA */
+/* 🚚 ENTREGA Y OPCIONES */
 .tipo-entrega {
-    padding: 20px 15px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 .tipo-entrega h3 {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
 }
 
 .opciones {
@@ -199,130 +191,70 @@ img {
 
 .opciones button {
     flex: 1;
-    padding: 14px;
-
-    font-size: 16px;
-    font-weight: bold;
-
+    padding: 15px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
     border-radius: 12px;
-    border: 1px solid rgba(0,255,255,0.3);
-
-    background: rgba(0,0,0,0.6);
+    border: 1px solid #00eaff;
+    background: transparent;
     color: white;
-
     cursor: pointer;
-    transition: 0.2s;
 }
 
 .opciones button.activo {
-    background: linear-gradient(45deg, #00eaff, #00ffcc);
+    background: #00eaff;
     color: black;
-
-    box-shadow: 0 0 10px #00eaff;
+    box-shadow: 0 0 15px #00eaff;
 }
 
-/* DIRECCIÓN */
-#campo-direccion {
-    margin-top: 10px;
-    text-align: center;
+/* UBICACIÓN Y DIRECCIÓN */
+.btn-ubicacion {
+    width: 100%;
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(0,234,255,0.1);
+    border: 1px dashed #00eaff;
+    color: #00eaff;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
 }
 
 #direccion {
     width: 100%;
-    max-width: 350px;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
+    margin-top: 10px;
+    padding: 12px;
+    background: #111;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
 }
 
-/* 🚀 BOTÓN PEDIR PRO */
+/* 🚀 BOTÓN WHATSAPP FLOTANTE */
 #btn-whatsapp {
     position: fixed;
-    bottom: 15px;
-    right: 15px;
-
-    padding: 14px 20px;
-
-    border-radius: 30px;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    padding: 18px;
+    background: linear-gradient(45deg, #25d366, #128c7e);
+    color: white;
     border: none;
-
-    font-size: 16px;
-    font-weight: bold;
-
-    background: linear-gradient(45deg, #00eaff, #00ffcc);
-    color: black;
-
-    box-shadow:
-        0 0 15px rgba(0,234,255,0.6);
-
-    cursor: pointer;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    z-index: 9999;
 }
 
-/* MOBILE */
-@media (max-width: 600px) {
-    h1 {
-        font-size: 32px;
+/* AJUSTES PARA PANTALLAS MUY CHICAS */
+@media (max-width: 380px) {
+    #contenedor-productos {
+        grid-template-columns: 1fr; /* Una sola columna si el celular es muy angosto */
     }
-}
-/* BOTÓN UBICACIÓN PRO (MISMO ESTILO QUE LA APP) */
-.btn-ubicacion {
-    margin-top: 10px;
-
-    width: 100%;
-    max-width: 350px;
-    padding: 12px;
-
-    border-radius: 12px;
-    border: 1px solid rgba(0,255,255,0.25);
-
-    background: rgba(0,0,0,0.6);
-    color: #00eaff;
-
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    cursor: pointer;
-    transition: 0.2s;
-
-    box-shadow:
-        0 0 10px rgba(0,234,255,0.2),
-        inset 0 0 8px rgba(0,234,255,0.1);
-}
-
-/* HOVER / TOUCH */
-.btn-ubicacion:active {
-    transform: scale(0.96);
-}
-
-/* ESTADO ACTIVO (cuando ya obtuvo ubicación) */
-.btn-ubicacion.activo {
-    background: linear-gradient(45deg, #00eaff, #00ffcc);
-    color: black;
-
-    box-shadow: 0 0 12px #00eaff;
-}
-/* --- AJUSTES FINALES LOGO --- */
-.logo {
-    width: 100px; /* Probá con este tamaño, queda flama */
-    height: auto;
-    display: block;
-    margin: 0 auto 5px;
-    filter: drop-shadow(0 0 8px rgba(0, 234, 255, 0.5));
-}
-
-header {
-    padding-top: 15px; 
-    padding-bottom: 10px;
-}
-
-.tagline {
-    font-size: 13px;
-    letter-spacing: 1px;
-    margin-top: -5px;
+    h1 { font-size: 30px; }
 }
