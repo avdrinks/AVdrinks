@@ -1,7 +1,10 @@
-/* Importar fuentes */
+/* =========================
+   BASE
+========================= */
 body {
     margin: 0;
     padding: 0;
+    padding-bottom: 140px; /* evita que el botón tape contenido */
     font-family: 'Inter', sans-serif;
     color: #ffffff;
     background-color: #0d0d0d;
@@ -12,7 +15,7 @@ body {
     min-height: 100vh;
 }
 
-/* Capa oscura para que el texto resalte sobre el fondo */
+/* Overlay oscuro */
 body::before {
     content: "";
     position: fixed;
@@ -21,6 +24,9 @@ body::before {
     z-index: -1;
 }
 
+/* =========================
+   HEADER
+========================= */
 header {
     text-align: center;
     padding: 40px 20px 20px;
@@ -28,67 +34,42 @@ header {
 
 .logo {
     width: 100px;
-    height: auto;
     filter: drop-shadow(0 0 10px #00ffcc);
-    margin-bottom: 10px;
 }
 
 h1 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 900;
-    letter-spacing: -1px;
 }
 
 .tagline {
     color: #00ffcc;
     margin-top: 5px;
-    font-weight: 400;
     letter-spacing: 2px;
     text-transform: uppercase;
     font-size: 0.8rem;
 }
 
-h2 {
-    text-align: center;
-    color: #ffffff;
-    text-transform: uppercase;
-    border-bottom: 2px solid #00ffcc;
-    display: inline-block;
-    margin: 30px auto 20px;
-    padding-bottom: 5px;
-}
-
-#menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 100px;
-}
-
-/* Grid de productos */
-.grid-productos {
+/* =========================
+   PRODUCTOS
+========================= */
+#contenedor-productos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
     padding: 20px;
-    width: 100%;
-    max-width: 1000px;
-    box-sizing: border-box;
+    max-width: 1100px;
+    margin: auto;
 }
 
-/* Tarjeta individual */
 .tarjeta-producto {
-    background: rgba(26, 26, 26, 0.8);
-    backdrop-filter: blur(5px); /* Efecto vidrio */
+    background: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(6px);
     border: 1px solid #333;
     border-radius: 15px;
     padding: 15px;
-    text-align: center;
     transition: 0.3s;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 
 .tarjeta-producto:hover {
@@ -98,52 +79,147 @@ h2 {
 
 .tarjeta-producto img {
     width: 100%;
-    height: 140px;
+    height: 150px;
     object-fit: contain;
-    margin-bottom: 10px;
 }
 
 .tarjeta-producto h3 {
-    margin: 10px 0 5px;
     font-size: 1rem;
-    color: #ffffff;
+    margin: 10px 0;
 }
 
 .tarjeta-producto p {
     color: #00ffcc;
     font-size: 1.2rem;
     font-weight: 900;
-    margin: 5px 0 15px;
 }
 
-.tarjeta-producto button {
+/* =========================
+   CONTADOR + / -
+========================= */
+.contador {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.contador button {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 8px;
+    border: none;
     background: #00ffcc;
     color: #000;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
-    text-transform: uppercase;
-    font-size: 0.8rem;
 }
 
-/* Botón Flotante de WhatsApp */
-#btn-whatsapp {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+.contador span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* =========================
+   ENTREGA
+========================= */
+.tipo-entrega {
+    margin: 30px 20px;
+    text-align: center;
+}
+
+.opciones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.opciones button {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: none;
+    background: #111;
+    color: #00ffcc;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.opciones button.activo {
+    background: #00ffcc;
+    color: #000;
+}
+
+/* BOTÓN UBICACIÓN */
+.btn-ubicacion {
+    margin-top: 15px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #00ffcc;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* INPUT DIRECCIÓN */
+#campo-direccion input {
     width: 90%;
     max-width: 400px;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+}
+
+/* =========================
+   CARRITO INFO
+========================= */
+.carrito-info {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+/* =========================
+   BOTÓN WHATSAPP
+========================= */
+#btn-whatsapp {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 420px;
     padding: 18px;
     background: #25d366;
     color: white;
     border: none;
     border-radius: 50px;
     font-weight: 900;
-    font-size: 1rem;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    font-size: 1.1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     cursor: pointer;
     z-index: 1000;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .tarjeta-producto {
+        padding: 12px;
+    }
+
+    .contador button {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+    }
 }
