@@ -147,12 +147,3 @@ h2 {
     cursor: pointer;
     z-index: 1000;
 }
-.tarjeta-producto h3 {
-    color: #FF00FF; /* Aquí ponés el color que quieras, por ejemplo Fucsia Neón */
-    margin: 10px 0 5px;
-    font-size: 1rem;
-}
-
-.footer-spacer {
-    height: 100px;
-}
