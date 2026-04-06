@@ -1,67 +1,106 @@
-/* =========================
-   FIX MOBILE PERFORMANCE
-========================= */
+/* BASE */
 body {
-    background-attachment: scroll; /* 🔥 CLAVE: evita bugs en celular */
+    margin: 0;
+    padding: 0;
+    padding-bottom: 140px;
+    font-family: Arial, sans-serif;
+    color: #fff;
+
+    background: #0d0d0d;
+    background-image: url('https://images.unsplash.com/photo-1514361892635-cebb07e59f1c?q=80&w=1470&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll; /* FIX MOBILE */
 }
 
-/* =========================
-   MEJORAS VISUALES
-========================= */
+/* Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.75);
+    z-index: -1;
+}
+
+/* HEADER */
+header {
+    text-align: center;
+    padding: 30px;
+}
+
+h1 {
+    color: #00ffcc;
+}
+
+.tagline {
+    color: #00ffcc;
+}
+
+/* PRODUCTOS */
+#contenedor-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+    padding: 15px;
+}
+
 .tarjeta-producto {
-    box-shadow: 0 0 15px rgba(0,255,204,0.08);
+    background: rgba(20,20,20,0.9);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
 }
 
-.tarjeta-producto:hover {
-    box-shadow: 0 0 20px rgba(0,255,204,0.3);
+.tarjeta-producto img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
 }
 
-/* BOTONES ENTREGA MÁS CLAROS */
+/* CONTADOR */
+.contador {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* ENTREGA */
+.opciones {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
 .opciones button {
-    opacity: 0.6;
+    flex: 1;
+    padding: 10px;
+    opacity: 0.5;
 }
 
 .opciones button.activo {
     opacity: 1;
-    box-shadow: 0 0 10px #00ffcc;
+    background: #00ffcc;
+    color: black;
 }
 
-/* BOTÓN WHATSAPP MÁS "APP" */
+/* BOTÓN WHATSAPP */
 #btn-whatsapp {
-    transition: 0.2s;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    padding: 15px;
+    background: #25d366;
+    border: none;
+    border-radius: 30px;
+    font-size: 18px;
 }
 
-#btn-whatsapp:active {
-    transform: translateX(-50%) scale(0.97);
-}
-
-/* INPUT MEJORADO */
-#campo-direccion input {
-    background: #111;
-    color: white;
-}
-
-/* =========================
-   MOBILE EXTRA FIX
-========================= */
+/* MOBILE */
 @media (max-width: 600px) {
-
-    body {
-        background-size: cover;
-    }
-
     #contenedor-productos {
-        padding: 15px;
-        gap: 15px;
-    }
-
-    .tarjeta-producto img {
-        height: 120px;
-    }
-
-    #btn-whatsapp {
-        width: 95%;
-        bottom: 10px;
-        padding: 16px;
+        grid-template-columns: 1fr;
     }
 }
