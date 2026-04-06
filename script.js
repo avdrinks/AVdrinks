@@ -19,6 +19,6 @@ function enviarPedido() {
     mensaje += `%0ATotal: $${total}`;
     
     // Cambia el número por el de tu negocio
-    const telefono = "542634351883"; 
+    const telefono = "+5492634351883"; 
     window.open(`https://wa.me/${telefono}?text=${mensaje}`, '_blank');
 }
