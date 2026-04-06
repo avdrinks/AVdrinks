@@ -2,15 +2,15 @@ const URL_API = "https://script.google.com/macros/s/AKfycby5myZ0i9IGHpsKkt4kUmA3
 
 let productos = [];
 let carrito = [];
-let tipoEntrega = "retiro";
+let tipoEntrega = null;
 let ubicacionLink = "";
 
-// ELEMENTOS
 const contenedor = document.getElementById("contenedor-productos");
 const contador = document.getElementById("contador-productos");
+const btnWhatsapp = document.getElementById("btn-whatsapp");
 
 // =========================
-// CARGAR PRODUCTOS DESDE SHEET
+// CARGAR PRODUCTOS
 // =========================
 async function cargarProductos() {
     try {
@@ -29,27 +29,25 @@ async function cargarProductos() {
         renderProductos();
 
     } catch (error) {
-        console.error("Error:", error);
         alert("Error cargando productos");
     }
 }
 
 // =========================
-// RENDER PRODUCTOS
+// RENDER
 // =========================
 function renderProductos() {
     contenedor.innerHTML = "";
 
     productos.forEach(prod => {
         const div = document.createElement("div");
-        div.classList.add("tarjeta-producto");
 
         div.innerHTML = `
-            <img src="${prod.img}" onerror="this.src='https://via.placeholder.com/150'">
+            <img src="${prod.img}">
             <h3>${prod.nombre}</h3>
             <p>$${prod.precio}</p>
 
-            <div class="contador">
+            <div>
                 <button onclick="restar(${prod.id})">-</button>
                 <span id="cant-${prod.id}">0</span>
                 <button onclick="sumar(${prod.id})">+</button>
@@ -82,8 +80,8 @@ function actualizarCantidad(id, cambio) {
     let valor = Number(span.innerText);
     valor += cambio;
     if (valor < 0) valor = 0;
-    span.innerText = valor;
 
+    span.innerText = valor;
     contador.innerText = carrito.length;
 }
 
@@ -108,33 +106,35 @@ function seleccionarEntrega(tipo) {
         btnDelivery.classList.add("activo");
         campo.style.display = "block";
     }
+
+    btnWhatsapp.disabled = false;
 }
 
 // =========================
-// UBICACION GPS
+// UBICACION
 // =========================
 function usarUbicacion() {
-    if (!navigator.geolocation) {
-        alert("Tu navegador no permite ubicación");
-        return;
-    }
-
     navigator.geolocation.getCurrentPosition(pos => {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
 
         ubicacionLink = `https://www.google.com/maps?q=${lat},${lon}`;
-
         alert("Ubicación cargada ✔");
     });
 }
 
 // =========================
-// ENVIAR PEDIDO
+// ENVIAR
 // =========================
 function enviarPedido() {
+
+    if (!tipoEntrega) {
+        alert("Seleccioná Retiro o Delivery");
+        return;
+    }
+
     if (carrito.length === 0) {
-        alert("El pedido está vacío");
+        alert("Agregá productos");
         return;
     }
 
@@ -153,30 +153,27 @@ function enviarPedido() {
 
     mensaje += `%0A*Total: $${total}*%0A%0A`;
 
-    // ENTREGA
     if (tipoEntrega === "delivery") {
         const direccion = document.getElementById("direccion").value;
 
-        mensaje += "🚚 *Delivery*%0A";
+        mensaje += "🚚 Delivery%0A";
 
         if (ubicacionLink) {
-            mensaje += `📍 Ubicación: ${ubicacionLink}%0A`;
+            mensaje += `📍 ${ubicacionLink}%0A`;
         } else if (direccion) {
-            mensaje += `📍 Dirección: ${direccion}%0A`;
+            mensaje += `📍 ${direccion}%0A`;
         } else {
-            alert("Poné ubicación o dirección");
+            alert("Poné dirección o ubicación");
             return;
         }
 
     } else {
-        mensaje += "🏠 *Retiro en el local*%0A";
+        mensaje += "🏠 Retiro en local%0A";
     }
 
     const telefono = "5492634351883";
     window.open(`https://wa.me/${telefono}?text=${mensaje}`);
 }
 
-// =========================
-// INICIAR
 // =========================
 cargarProductos();
