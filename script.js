@@ -5,10 +5,6 @@ let carrito = [];
 let tipoEntrega = null;
 let ubicacionLink = "";
 
-const contenedor = document.getElementById("contenedor-productos");
-const contadorHeader = document.getElementById("contador-productos");
-const btnWhatsapp = document.getElementById("btn-whatsapp");
-
 // =========================
 // CARGAR PRODUCTOS
 // =========================
@@ -23,7 +19,9 @@ async function cargarProductos() {
                 id: Number(p.id),
                 nombre: p.nombre,
                 precio: Number(p.precio),
-                img: p.img
+                img: p.img,
+                // Lee tu nueva columna. Si está vacía, manda a "unidades" por defecto.
+                categoria: p.categoria ? p.categoria.toLowerCase().trim() : "unidades"
             }));
 
         renderProductos();
@@ -35,35 +33,67 @@ async function cargarProductos() {
 }
 
 // =========================
-// RENDER (REPARADO PARA EL NUEVO CSS)
+// RENDER (ACORDEÓN DESPLEGABLE)
 // =========================
 function renderProductos() {
-    contenedor.innerHTML = "";
+    const categorias = ['promos', 'unidades', 'snacks'];
+    
+    categorias.forEach(cat => {
+        const listaContenedor = document.getElementById(`lista-${cat}`);
+        if (!listaContenedor) return;
 
-    productos.forEach(prod => {
-        const div = document.createElement("div");
-        div.classList.add("tarjeta-producto"); // Añadimos la clase para el CSS
+        listaContenedor.innerHTML = ""; // Limpiar antes de llenar
 
-        div.innerHTML = `
-            <div class="contenedor-imagen">
-                <img src="${prod.img}" alt="${prod.nombre}" onerror="this.src='img/placeholder.png'">
-            </div>
-            <h3>${prod.nombre}</h3>
-            <p>$${prod.precio}</p>
+        const filtrados = productos.filter(p => p.categoria === cat);
 
-            <div class="contador">
-                <button onclick="restar(${prod.id})">-</button>
-                <span id="cant-${prod.id}">0</span>
-                <button onclick="sumar(${prod.id})">+</button>
-            </div>
-        `;
+        filtrados.forEach(prod => {
+            const div = document.createElement("div");
+            div.classList.add("tarjeta-producto");
 
-        contenedor.appendChild(div);
+            // Buscamos si ya hay cantidad en el carrito para este producto
+            const cantActual = carrito.filter(item => item.id === prod.id).length;
+
+            div.innerHTML = `
+                <div class="contenedor-imagen">
+                    <img src="${prod.img}" alt="${prod.nombre}" onerror="this.src='img/placeholder.png'">
+                </div>
+                <h3>${prod.nombre}</h3>
+                <p>$${prod.precio}</p>
+
+                <div class="contador">
+                    <button onclick="event.stopPropagation(); restar(${prod.id})">-</button>
+                    <span id="cant-${prod.id}">${cantActual}</span>
+                    <button onclick="event.stopPropagation(); sumar(${prod.id})">+</button>
+                </div>
+            `;
+            listaContenedor.appendChild(div);
+        });
     });
 }
 
 // =========================
-// LÓGICA DEL CARRITO
+// LÓGICA DE APERTURA (TOGGLE)
+// =========================
+function toggleCategoria(cat) {
+    const lista = document.getElementById(`lista-${cat}`);
+    const flecha = document.getElementById(`flecha-${cat}`);
+    const estaAbierto = lista.style.display === "grid";
+
+    // Cerramos todos para que quede prolijo
+    document.querySelectorAll('.contenido-cat').forEach(el => el.style.display = "none");
+    document.querySelectorAll('.flecha').forEach(el => el.innerText = "▶");
+
+    // Si estaba cerrado, lo abrimos
+    if (!estaAbierto) {
+        lista.style.display = "grid";
+        flecha.innerText = "▼";
+        // Scroll suave al abrir para que el cliente vea los productos
+        lista.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// =========================
+// CARRITO
 // =========================
 function sumar(id) {
     const prod = productos.find(p => p.id === id);
@@ -82,26 +112,19 @@ function restar(id) {
 }
 
 function actualizarInterfaz(id) {
-    // Actualizar cantidad individual en la tarjeta
     const span = document.getElementById(`cant-${id}`);
-    const cantidadActual = carrito.filter(p => p.id === id).length;
+    const cantTotal = document.getElementById("contador-productos");
+    const cantidadProducto = carrito.filter(p => p.id === id).length;
     
-    if (span) {
-        span.innerText = cantidadActual;
-    }
-    
-    // Actualizar contador total en el header
-    if (contadorHeader) {
-        contadorHeader.innerText = carrito.length;
-    }
+    if (span) span.innerText = cantidadProducto;
+    if (cantTotal) cantTotal.innerText = carrito.length;
 }
 
 // =========================
-// ENTREGA
+// ENTREGA Y UBICACIÓN
 // =========================
 function seleccionarEntrega(tipo) {
     tipoEntrega = tipo;
-
     const btnRetiro = document.getElementById("btn-retiro");
     const btnDelivery = document.getElementById("btn-delivery");
     const campo = document.getElementById("campo-direccion");
@@ -119,85 +142,56 @@ function seleccionarEntrega(tipo) {
     }
 }
 
-// =========================
-// UBICACIÓN (LINK CORREGIDO)
-// =========================
 function usarUbicacion() {
-    if (!navigator.geolocation) {
-        alert("Tu navegador no soporta geolocalización");
-        return;
-    }
+    const btnUbi = document.querySelector(".btn-ubicacion");
+    btnUbi.innerHTML = "⏳ Obteniendo...";
 
     navigator.geolocation.getCurrentPosition(pos => {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
-
-        // URL corregida para Google Maps
         ubicacionLink = `https://www.google.com/maps?q=${lat},${lon}`;
         
-        const btnUbi = document.querySelector(".btn-ubicacion");
         btnUbi.innerHTML = "📍 Ubicación Cargada ✔";
         btnUbi.classList.add("activo");
-        alert("Ubicación obtenida correctamente");
-    }, error => {
-        alert("No se pudo obtener la ubicación. Por favor, escribí tu dirección.");
+    }, () => {
+        btnUbi.innerHTML = "📍 Error al cargar";
+        alert("No se pudo obtener ubicación. Escribila manualmente.");
     });
 }
 
 // =========================
-// ENVIAR PEDIDO A WHATSAPP
+// WHATSAPP
 // =========================
 function enviarPedido() {
-    if (carrito.length === 0) {
-        alert("¡El carrito está vacío! Agregá algunas bebidas.");
-        return;
-    }
-
-    if (!tipoEntrega) {
-        alert("Por favor, seleccioná si es Retiro o Delivery.");
-        return;
-    }
+    if (carrito.length === 0) return alert("Agregá algo al carrito.");
+    if (!tipoEntrega) return alert("Seleccioná Retiro o Delivery.");
 
     let mensaje = "🚀 *NUEVO PEDIDO - AV DRINKS*%0A%0A";
-    let total = 0;
     const resumen = {};
+    let total = 0;
 
-    // Agrupar productos por nombre
     carrito.forEach(p => {
         resumen[p.nombre] = (resumen[p.nombre] || 0) + 1;
         total += p.precio;
     });
 
-    // Listar productos
     for (let nombre in resumen) {
         mensaje += `• *${resumen[nombre]}x* ${nombre}%0A`;
     }
 
-    mensaje += `%0A💰 *TOTAL A PAGAR: $${total}*%0A`;
+    mensaje += `%0A💰 *TOTAL: $${total}*%0A`;
     mensaje += `────────────────────%0A`;
 
     if (tipoEntrega === "delivery") {
         const direccion = document.getElementById("direccion").value;
-        mensaje += "🛵 *MODO:* Delivery%0A";
-
-        if (ubicacionLink) {
-            mensaje += `📍 *Ubicación:* ${ubicacionLink}%0A`;
-        } else if (direccion.trim() !== "") {
-            mensaje += `🏠 *Dirección:* ${direccion}%0A`;
-        } else {
-            alert("Para delivery, necesitamos tu ubicación o dirección escrita.");
-            return;
-        }
+        mensaje += "🛵 *Entrega:* Delivery%0A";
+        mensaje += ubicacionLink ? `📍 *Mapa:* ${ubicacionLink}%0A` : `🏠 *Dir:* ${direccion}%0A`;
+        if (!ubicacionLink && !direccion) return alert("Falta la dirección.");
     } else {
-        mensaje += "🏠 *MODO:* Retiro en local%0A";
+        mensaje += "🏠 *Entrega:* Retiro en local%0A";
     }
 
-    const telefono = "5492634351883";
-    const urlWa = `https://wa.me/${telefono}?text=${mensaje}`;
-    window.open(urlWa, "_blank");
+    window.open(`https://wa.me/5492634351883?text=${mensaje}`, "_blank");
 }
 
-// =========================
-// INICIO
-// =========================
 cargarProductos();
