@@ -20,7 +20,7 @@ async function cargarProductos() {
                 nombre: p.nombre,
                 precio: Number(p.precio),
                 img: p.img,
-                // Lee tu nueva columna. Si está vacía, manda a "unidades" por defecto.
+                // Si la categoría no existe en el Excel, va a "unidades" por defecto
                 categoria: p.categoria ? p.categoria.toLowerCase().trim() : "unidades"
             }));
 
@@ -33,16 +33,17 @@ async function cargarProductos() {
 }
 
 // =========================
-// RENDER (ACORDEÓN DESPLEGABLE)
+// RENDER (4 CATEGORÍAS)
 // =========================
 function renderProductos() {
-    const categorias = ['promos', 'unidades', 'snacks'];
+    // Definimos las 4 categorías que tiene tu HTML
+    const categorias = ['promos', 'unidades', 'snacks', 'cigarros'];
     
     categorias.forEach(cat => {
         const listaContenedor = document.getElementById(`lista-${cat}`);
         if (!listaContenedor) return;
 
-        listaContenedor.innerHTML = ""; // Limpiar antes de llenar
+        listaContenedor.innerHTML = ""; 
 
         const filtrados = productos.filter(p => p.categoria === cat);
 
@@ -50,7 +51,6 @@ function renderProductos() {
             const div = document.createElement("div");
             div.classList.add("tarjeta-producto");
 
-            // Buscamos si ya hay cantidad en el carrito para este producto
             const cantActual = carrito.filter(item => item.id === prod.id).length;
 
             div.innerHTML = `
@@ -72,23 +72,24 @@ function renderProductos() {
 }
 
 // =========================
-// LÓGICA DE APERTURA (TOGGLE)
+// LÓGICA ACORDEÓN
 // =========================
 function toggleCategoria(cat) {
     const lista = document.getElementById(`lista-${cat}`);
     const flecha = document.getElementById(`flecha-${cat}`);
     const estaAbierto = lista.style.display === "grid";
 
-    // Cerramos todos para que quede prolijo
+    // Cerramos todo primero para que solo haya uno abierto a la vez
     document.querySelectorAll('.contenido-cat').forEach(el => el.style.display = "none");
     document.querySelectorAll('.flecha').forEach(el => el.innerText = "▶");
 
-    // Si estaba cerrado, lo abrimos
     if (!estaAbierto) {
         lista.style.display = "grid";
         flecha.innerText = "▼";
-        // Scroll suave al abrir para que el cliente vea los productos
-        lista.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Pequeño delay para que el scroll sea fluido después de que aparezca el contenido
+        setTimeout(() => {
+            lista.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
     }
 }
 
@@ -154,7 +155,7 @@ function usarUbicacion() {
         btnUbi.innerHTML = "📍 Ubicación Cargada ✔";
         btnUbi.classList.add("activo");
     }, () => {
-        btnUbi.innerHTML = "📍 Error al cargar";
+        btnUbi.innerHTML = "📍 Reintentar";
         alert("No se pudo obtener ubicación. Escribila manualmente.");
     });
 }
@@ -163,8 +164,8 @@ function usarUbicacion() {
 // WHATSAPP
 // =========================
 function enviarPedido() {
-    if (carrito.length === 0) return alert("Agregá algo al carrito.");
-    if (!tipoEntrega) return alert("Seleccioná Retiro o Delivery.");
+    if (carrito.length === 0) return alert("¡Tu carrito está vacío!");
+    if (!tipoEntrega) return alert("Seleccioná un método de entrega.");
 
     let mensaje = "🚀 *NUEVO PEDIDO - AV DRINKS*%0A%0A";
     const resumen = {};
@@ -184,11 +185,16 @@ function enviarPedido() {
 
     if (tipoEntrega === "delivery") {
         const direccion = document.getElementById("direccion").value;
-        mensaje += "🛵 *Entrega:* Delivery%0A";
-        mensaje += ubicacionLink ? `📍 *Mapa:* ${ubicacionLink}%0A` : `🏠 *Dir:* ${direccion}%0A`;
-        if (!ubicacionLink && !direccion) return alert("Falta la dirección.");
+        mensaje += "🛵 *MODO:* Delivery%0A";
+        if (ubicacionLink) {
+            mensaje += `📍 *Ubicación:* ${ubicacionLink}%0A`;
+        } else if (direccion.trim() !== "") {
+            mensaje += `🏠 *Dirección:* ${direccion}%0A`;
+        } else {
+            return alert("Falta tu dirección o ubicación.");
+        }
     } else {
-        mensaje += "🏠 *Entrega:* Retiro en local%0A";
+        mensaje += "🏠 *MODO:* Retiro en local%0A";
     }
 
     window.open(`https://wa.me/5492634351883?text=${mensaje}`, "_blank");
