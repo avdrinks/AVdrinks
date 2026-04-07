@@ -6,24 +6,53 @@
     <title>AV Drinks - Pedidos</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
         <img src="img/logo-av.png" alt="A&V Drinks Logo" class="logo">
+        <h1>AV DRINKS</h1>
         <p class="tagline">Delivery de bebidas</p>
     </header>
 
     <div class="carrito-info">
-        🛒 Productos: <span id="contador-productos">0</span>
+        🛒 Seleccionados: <span id="contador-productos">0</span>
     </div>
 
-    <section id="contenedor-productos"></section>
+    <div class="acordeon-bebidas">
+        
+        <div class="categoria-item">
+            <div class="cabecera-cat" onclick="toggleCategoria('promos')">
+                <span>🔥 PROMOS</span>
+                <span class="flecha" id="flecha-promos">▼</span>
+            </div>
+            <div id="lista-promos" class="contenido-cat" style="display: grid;">
+                </div>
+        </div>
+
+        <div class="categoria-item">
+            <div class="cabecera-cat" onclick="toggleCategoria('unidades')">
+                <span>🍾 UNIDADES</span>
+                <span class="flecha" id="flecha-unidades">▶</span>
+            </div>
+            <div id="lista-unidades" class="contenido-cat" style="display: none;">
+                </div>
+        </div>
+
+        <div class="categoria-item">
+            <div class="cabecera-cat" onclick="toggleCategoria('snacks')">
+                <span>🍟 SNACKS</span>
+                <span class="flecha" id="flecha-snacks">▶</span>
+            </div>
+            <div id="lista-snacks" class="contenido-cat" style="display: none;">
+                </div>
+        </div>
+
+    </div>
 
     <div class="tipo-entrega">
-        <h3>Tipo de Entrega</h3>
+        <h3>¿Cómo lo recibís?</h3>
 
         <div class="opciones">
             <button id="btn-retiro" class="opcion-btn" onclick="seleccionarEntrega('retiro')">🏠 Retiro</button>
@@ -31,16 +60,16 @@
         </div>
 
         <div id="campo-direccion" style="display:none;">
-            <button class="btn-ubicacion" onclick="usarUbicacion()">📍 Usar mi ubicación</button>
+            <button class="btn-ubicacion" onclick="usarUbicacion()">📍 Compartir Ubicación GPS</button>
             <div class="separador-o">
-                <span>o escribir dirección</span>
+                <span>o escribí tu dirección abajo</span>
             </div>
             <input type="text" id="direccion" placeholder="Barrio, calle, nro de casa">
         </div>
     </div>
 
     <button id="btn-whatsapp" onclick="enviarPedido()">
-        Pedir por WhatsApp
+        🚀 ENVIAR PEDIDO A WHATSAPP
     </button>
 
     <script src="script.js"></script>
