@@ -23,7 +23,7 @@ html, body {
 body {
     font-family: 'Rajdhani', sans-serif;
     color: white;
-    padding-bottom: 120px; /* Espacio para el botón fijo */
+    padding-bottom: 120px; /* Espacio limpio para el botón fijo */
 }
 
 /* FONDO FIJO */
@@ -40,7 +40,7 @@ body::before {
 /* HEADER */
 header {
     text-align: center;
-    padding: 20px 10px;
+    padding: 20px 10px 10px 10px;
 }
 
 .logo {
@@ -62,6 +62,100 @@ h1 {
     letter-spacing: 2px;
     color: #00ffcc;
     opacity: 0.9;
+    margin-bottom: 15px;
+}
+
+/* 📱 CONTENEDOR DE BOTONES EN EL HEADER */
+.enlaces-directos {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 20px auto 10px auto;
+    width: 95%;
+    max-width: 480px;
+    box-sizing: border-box;
+}
+
+/* DISEÑO CÁPSULA IDÉNTICO A LA CAPTURA */
+.btn-contacto {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
+    border-radius: 50px; /* Redondeado cápsula */
+    text-decoration: none;
+    background-color: #000000; /* Fondo negro puro */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* TAMAÑO DE LOGOS VECTORIALES */
+.icono-svg {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    margin-right: 8px;
+}
+
+/* CAJA DE TEXTO EN DOS LÍNEAS */
+.texto-btn {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.05;
+}
+
+.texto-btn .linea1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.texto-btn .linea2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: bold;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* 🟢 NEÓN VERDE/CIAN (WHATSAPP) */
+.btn-wa-directo {
+    color: #00ffcc;
+    border: 3px solid #00ffcc;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.5), inset 0 0 6px rgba(0, 255, 204, 0.2);
+}
+
+.btn-wa-directo .icono-svg {
+    filter: drop-shadow(0 0 3px #00ffcc);
+}
+
+/* 💗 NEÓN ROSA INTENSO (INSTAGRAM) */
+.btn-ig-directo {
+    color: #ff007f;
+    border: 3px solid #ff007f;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.5), inset 0 0 6px rgba(255, 0, 127, 0.2);
+}
+
+.btn-ig-directo .icono-svg {
+    filter: drop-shadow(0 0 3px #ff007f);
+}
+
+/* EFECTO TOUCH EN CELULARES */
+.btn-contacto:active {
+    transform: scale(0.95);
+}
+
+/* 🛒 CARRITO INFO */
+.carrito-info {
+    text-align: center;
+    padding: 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
 }
 
 /* 📋 DISEÑO DE ACORDEÓN (CATEGORÍAS) */
@@ -90,7 +184,7 @@ h1 {
 }
 
 .contenido-cat {
-    display: none; /* Por defecto ocultos, se activan con JS */
+    display: none;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     padding: 12px;
@@ -117,7 +211,7 @@ h1 {
 .contenedor-imagen {
     width: 100%;
     height: 110px; 
-    background: white; /* Para que resalten las botellas y paquetes */
+    background: white;
     border-radius: 10px;
     padding: 8px;
     margin-bottom: 10px;
@@ -222,6 +316,22 @@ h1 {
     box-shadow: 0 0 15px rgba(37, 211, 102, 0.6);
 }
 
+.separador-o {
+    margin: 15px 0;
+    color: #888;
+    font-size: 14px;
+}
+
+#direccion {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #111;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 8px;
+}
+
 /* 🚀 BOTÓN WHATSAPP FIJO */
 #btn-whatsapp {
     position: fixed;
@@ -238,14 +348,4 @@ h1 {
     text-transform: uppercase;
     box-shadow: 0 0 20px rgba(0, 234, 255, 0.5);
     z-index: 9999;
-}
-
-#direccion {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background: #111;
-    border: 1px solid rgba(255,255,255,0.2);
-    color: white;
-    border-radius: 8px;
 }
